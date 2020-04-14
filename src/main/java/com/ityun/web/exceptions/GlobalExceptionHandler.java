@@ -3,6 +3,7 @@ package com.ityun.web.exceptions;
 import com.ityun.base.lang.Result;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.BindException;
+import org.springframework.web.HttpMediaTypeException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
@@ -50,6 +51,12 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public Result handelHttpMessageNotReadableException(HttpMessageNotReadableException e) {
+        String message = e.getMessage();
+        return Result.failure(message);
+    }
+
+    @ExceptionHandler(HttpMediaTypeException.class)
+    public Result handleHttpMediaTypeException(HttpMediaTypeException e) {
         String message = e.getMessage();
         return Result.failure(message);
     }
