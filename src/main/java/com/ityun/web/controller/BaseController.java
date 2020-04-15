@@ -15,7 +15,6 @@ public class BaseController {
     private UserService userService;
 
     protected Result executeLogin(String username, String password) {
-        //TODO:登录逻辑
         Map<String, String> result = new HashMap<>();
         User user = userService.login(username, md5(password));
         System.out.println(user);
