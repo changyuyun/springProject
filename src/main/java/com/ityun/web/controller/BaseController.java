@@ -1,6 +1,7 @@
 package com.ityun.web.controller;
 
 import com.ityun.base.lang.Result;
+import com.ityun.base.utils.TokenUtils;
 import com.ityun.modules.entity.User;
 import com.ityun.modules.service.UserService;
 import org.apache.commons.codec.digest.DigestUtils;
@@ -27,6 +28,7 @@ public class BaseController {
         result.put("avatar", user.getAvatar());
         result.put("gender", String.valueOf(user.getGender()));
         result.put("last_login", String.valueOf(user.getLast_login()));
+        result.put("token", TokenUtils.makeToken());
         return Result.success("ok", result);
     }
 
