@@ -10,6 +10,7 @@ import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import javax.servlet.ServletException;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import java.util.stream.Collectors;
@@ -57,6 +58,12 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(HttpMediaTypeException.class)
     public Result handleHttpMediaTypeException(HttpMediaTypeException e) {
+        String message = e.getMessage();
+        return Result.failure(message);
+    }
+
+    @ExceptionHandler(ServletException.class)
+    public Result handleServletException(ServletException e) {
         String message = e.getMessage();
         return Result.failure(message);
     }

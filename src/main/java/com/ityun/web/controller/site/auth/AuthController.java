@@ -13,20 +13,19 @@ import org.springframework.web.bind.annotation.*;
  */
 
 @RestController
+@RequestMapping("/api/auth")
 public class AuthController extends BaseController {
 
     @PostMapping(value = "/login")
     public Result login(@Validated({UserLogin.class}) @RequestBody(required = false) User user) {
         String username = user.getUsername();
         String password = user.getPassword();
-        System.out.println(username);
-        System.out.println(password);
-        return Result.failure("error");
+        return executeLogin(username, password);
     }
 
     @PostMapping(value = "/register")
     public Result register(@Validated({UserRegister.class}) @RequestBody(required = false) User user) {
-        return Result.failure("error");
+        return Result.successMessage("ok");
     }
 
     @PostMapping(value = "/logout")
