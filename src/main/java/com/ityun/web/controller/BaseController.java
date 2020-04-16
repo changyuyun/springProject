@@ -45,4 +45,8 @@ public class BaseController {
         return RedisUtils.set(token, data, expiredTime);
     }
 
+    protected Object getTokenInfo(String token) {
+        return RedisUtils.get(token);
+    }
+
 }
