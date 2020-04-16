@@ -17,15 +17,15 @@ import org.springframework.web.bind.annotation.*;
 public class AuthController extends BaseController {
 
     @PostMapping(value = "/login")
-    public Result login(@Validated({UserLogin.class}) @RequestBody(required = false) User user) {
+    public Result login(@Validated({UserLogin.class}) @RequestBody(required = true) User user) {
         String username = user.getUsername();
         String password = user.getPassword();
         return executeLogin(username, password);
     }
 
     @PostMapping(value = "/register")
-    public Result register(@Validated({UserRegister.class}) @RequestBody(required = false) User user) {
-        return Result.successMessage("ok");
+    public Result register(@Validated({UserRegister.class}) @RequestBody(required = true) User user) {
+        return executeRegister(user);
     }
 
     @PostMapping(value = "/logout")

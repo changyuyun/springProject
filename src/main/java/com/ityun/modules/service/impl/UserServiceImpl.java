@@ -6,6 +6,8 @@ import com.ityun.modules.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
+
 @Service
 public class UserServiceImpl implements UserService {
     @Autowired
@@ -14,5 +16,10 @@ public class UserServiceImpl implements UserService {
     public User login(String username, String password) {
         User user = userMapper.findByUsernameAndPassword(username, password);
         return user;
+    }
+
+    @Override
+    public int register(String username, String name, String avatar, String email, String password, int status, Date created, int gender, int comments, int posts, String signature) {
+        return userMapper.addUser(username, name, avatar, email, password, status, created, gender, comments, posts, signature);
     }
 }

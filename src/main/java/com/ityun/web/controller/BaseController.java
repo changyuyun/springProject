@@ -9,6 +9,7 @@ import com.ityun.modules.service.UserService;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -35,6 +36,18 @@ public class BaseController {
         result.put("expiredTime", String.valueOf(expiredTime));
         tokenStore(token, result, expiredTime);
         return Result.success("ok", result);
+    }
+
+    protected Result executeRegister(User user) {
+        System.out.println(user.getUsername());
+        System.out.println(user.getPassword());
+        Date date = new Date();
+        System.out.println(date.toString());
+        int ret = userService.register(user.getUsername(), user.getName(), user.getAvatar(), user.getEmail(), md5(user.getPassword()), user.getStatus(), date, user.getGender(), user.getComments(), user.getPost(), user.getSignature());
+        if (ret <=0) {
+            return Result.failure("error");
+        }
+        return Result.successMessage("ok");
     }
 
     protected String md5(String needle) {
