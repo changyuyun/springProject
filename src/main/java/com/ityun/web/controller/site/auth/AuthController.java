@@ -8,12 +8,17 @@ import com.ityun.web.controller.BaseController;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import java.util.Map;
+
 /**
  * 身份识别相关接口
  */
 
 @RestController
 @RequestMapping("/api/auth")
+@Validated
 public class AuthController extends BaseController {
 
     @PostMapping(value = "/login")
@@ -29,12 +34,15 @@ public class AuthController extends BaseController {
     }
 
     @PostMapping(value = "/logout")
-    public Result logout() {
-        return null;
-    }
-
-    @PostMapping(value = "/status")
-    public Result status() {
-        return null;
+    public Result logout(@Validated @RequestBody(required = true) Map<String, Object> map) {
+        if (!map.containsKey("token")){
+            return Result.failure("token是必须参数");
+        }
+        if ("".equals(map.get("token"))) {
+            return Result.failure("token不能是空");
+        }
+        //TODO:登出逻辑
+        System.out.println(map.get("token"));
+        return Result.successMessage("ok");
     }
 }
