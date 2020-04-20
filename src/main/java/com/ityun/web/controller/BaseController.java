@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class BaseController {
+    private String redisTokenUserKey = "User:token:%s";
     @Autowired
     private UserService userService;
 
@@ -62,15 +63,19 @@ public class BaseController {
     }
 
     protected boolean tokenStore(String token, Object data, Long expiredTime) {
-        return RedisUtils.set(token, data, expiredTime);
+        return RedisUtils.set(createRedisUserTokenKey(token), data, expiredTime);
     }
 
     protected boolean removeToken(String token) {
-        return RedisUtils.del(token);
+        return RedisUtils.del(createRedisUserTokenKey(token));
+    }
+
+    protected String createRedisUserTokenKey(String token) {
+        return String.format(redisTokenUserKey, token);
     }
 
     protected Object getTokenInfo(String token) {
-        return RedisUtils.get(token);
+        return RedisUtils.get(createRedisUserTokenKey(token));
     }
 
 }
