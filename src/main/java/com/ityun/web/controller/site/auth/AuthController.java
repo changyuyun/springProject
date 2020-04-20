@@ -41,8 +41,7 @@ public class AuthController extends BaseController {
         if ("".equals(map.get("token"))) {
             return Result.failure("token不能是空");
         }
-        //TODO:登出逻辑
-        System.out.println(map.get("token"));
-        return Result.successMessage("ok");
+        String token = map.get("token").toString();
+        return executeLogout(token);
     }
 }

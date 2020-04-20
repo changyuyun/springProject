@@ -66,13 +66,16 @@ public class RedisUtils {
      * @param key 可以传一个值 或多个
      */
     @SuppressWarnings("unchecked")
-    public static void del(String ... key){
+    public static boolean del(String ... key){
         if(key!=null&&key.length>0){
             if(key.length==1){
-                JsonRedisTemplate.delete(key[0]);
+                return JsonRedisTemplate.delete(key[0]);
             }else{
                 JsonRedisTemplate.delete(CollectionUtils.arrayToList(key));
+                return true;
             }
+        } else {
+            return false;
         }
     }
 
