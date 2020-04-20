@@ -70,7 +70,7 @@ public class BaseController {
     }
 
     protected boolean userIdStore(String id, Object data) {
-        return RedisUtils.set(createRedisUserTokenKey(id), data);
+        return RedisUtils.set(createRedisUserIdKey(id), data);
     }
 
     protected boolean removeToken(String token) {
@@ -79,6 +79,10 @@ public class BaseController {
 
     protected String createRedisUserTokenKey(String token) {
         return String.format(redisTokenUserKey, token);
+    }
+
+    protected String createRedisUserIdKey(String id) {
+        return String.format(redisIdUserKey, id);
     }
 
     protected Object getTokenInfo(String token) {
