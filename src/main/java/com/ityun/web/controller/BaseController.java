@@ -15,6 +15,7 @@ import java.util.Map;
 
 public class BaseController {
     private String redisTokenUserKey = "User:token:%s";
+    private String redisIdUserKey = "User:id:%s";
     @Autowired
     private UserService userService;
 
@@ -27,6 +28,7 @@ public class BaseController {
             return Result.failure("username or password is error");
         }
         String token = TokenUtils.makeToken();
+        result.put("id", String.valueOf(user.getId()));
         result.put("username", user.getUsername());
         result.put("name", user.getName());
         result.put("email", user.getEmail());
@@ -36,6 +38,7 @@ public class BaseController {
         result.put("token", token);
         result.put("expiredTime", String.valueOf(expiredTime));
         tokenStore(token, result, expiredTime);
+        userIdStore(String.valueOf(user.getId()), result);
         return Result.success("ok", result);
     }
 
@@ -64,6 +67,10 @@ public class BaseController {
 
     protected boolean tokenStore(String token, Object data, Long expiredTime) {
         return RedisUtils.set(createRedisUserTokenKey(token), data, expiredTime);
+    }
+
+    protected boolean userIdStore(String id, Object data) {
+        return RedisUtils.set(createRedisUserTokenKey(id), data);
     }
 
     protected boolean removeToken(String token) {

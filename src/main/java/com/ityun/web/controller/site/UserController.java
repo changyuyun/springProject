@@ -23,4 +23,9 @@ public class UserController extends BaseController {
         }
         return Result.success("ok", tokenInfo);
     }
+
+    @PostMapping("edit")
+    public Result edit() {
+        return Result.successMessage("ok");
+    }
 }
