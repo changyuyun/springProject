@@ -21,6 +21,12 @@ public class BaseController {
 
     private Long expiredTime = 3600L;
 
+    /**
+     * 登陆
+     * @param username
+     * @param password
+     * @return
+     */
     protected Result executeLogin(String username, String password) {
         Map<String, String> result = new HashMap<>();
         User user = userService.login(username, md5(password));
@@ -42,9 +48,12 @@ public class BaseController {
         return Result.success("ok", result);
     }
 
+    /**
+     * 注册
+     * @param user
+     * @return
+     */
     protected Result executeRegister(User user) {
-        System.out.println(user.getUsername());
-        System.out.println(user.getPassword());
         Date date = new Date();
         int ret = userService.register(user.getUsername(), user.getName(), user.getAvatar(), user.getEmail(), md5(user.getPassword()), user.getStatus(), date, user.getGender(), user.getComments(), user.getPost(), user.getSignature());
         if (ret <=0) {
@@ -53,9 +62,22 @@ public class BaseController {
         return Result.successMessage("ok");
     }
 
+    /**
+     * 登出
+     * @param token
+     * @return
+     */
     protected Result executeLogout(String token) {
         Boolean ret = removeToken(token);
         if (!ret) {
+            return Result.failure("error");
+        }
+        return Result.successMessage("ok");
+    }
+
+    protected Result executeEdit(User user) {
+        int ret = userService.edit(user.getId(), user.getAvatar(), user.getSignature(), user.getName(), user.getEmail(), user.getGender());
+        if (ret <=0) {
             return Result.failure("error");
         }
         return Result.successMessage("ok");

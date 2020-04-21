@@ -9,10 +9,12 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.multipart.MultipartException;
 
 import javax.servlet.ServletException;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
+import javax.validation.UnexpectedTypeException;
 import java.util.stream.Collectors;
 
 /**
@@ -64,6 +66,18 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(ServletException.class)
     public Result handleServletException(ServletException e) {
+        String message = e.getMessage();
+        return Result.failure(message);
+    }
+
+    @ExceptionHandler(MultipartException.class)
+    public Result handleMultipartException(MultipartException e) {
+        String message = e.getMessage();
+        return Result.failure(message);
+    }
+
+    @ExceptionHandler(UnexpectedTypeException.class)
+    public Result handleUnexpectedTypeException(UnexpectedTypeException e) {
         String message = e.getMessage();
         return Result.failure(message);
     }

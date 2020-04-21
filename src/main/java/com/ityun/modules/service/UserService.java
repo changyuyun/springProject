@@ -8,4 +8,6 @@ public interface UserService {
     User login(String username, String password);
 
     int register(String username, String name, String avatar, String email, String password, int status, Date created, int gender, int comments, int posts, String signature);
+
+    int edit(int id, String avatar, String signature, String name, String email, int gender);
 }

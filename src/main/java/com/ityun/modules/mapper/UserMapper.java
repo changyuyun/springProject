@@ -1,10 +1,7 @@
 package com.ityun.modules.mapper;
 
 import com.ityun.modules.entity.User;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 
 import java.util.Date;
 
@@ -29,4 +26,12 @@ public interface UserMapper {
                 @Param("comments") int comments,
                 @Param("posts") int posts,
                 @Param("signature") String signature);
+
+    @Update("update mto_user set avatar=#{avatar}, signature=#{signature}, name=#{name},email=#{email},gender=#{gender} where id=#{id}")
+    int updateUser(@Param("id") int id,
+                   @Param("avatar") String avatar,
+                   @Param("signature") String signature,
+                   @Param("name") String name,
+                   @Param("email") String email,
+                   @Param("gender") int gender);
 }
