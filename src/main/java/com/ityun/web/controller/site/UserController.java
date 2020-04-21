@@ -73,4 +73,10 @@ public class UserController extends BaseController {
         res.put("filename", filePath+fileName);
         return Result.success("ok", res);
     }
+
+    @RequestMapping("reset/password")
+    public Result resetPassword() {
+        //todo:重置密码逻辑
+        return Result.successMessage("ok");
+    }
 }
