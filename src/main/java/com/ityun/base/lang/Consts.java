@@ -4,7 +4,7 @@ public interface Consts {
     /**
      * 文件存储-头像目录
      */
-    String avatarPath = "/storage/avatars";
+    String avatarPath = "/storage/avatars/";
 
     /**
      * 默认头像
