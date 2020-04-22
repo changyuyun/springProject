@@ -1,9 +1,12 @@
 package com.ityun.web.controller.site;
 
+import com.ityun.base.lang.Consts;
 import com.ityun.base.lang.Result;
+import com.ityun.config.SiteConfig;
 import com.ityun.modules.entity.User;
 import com.ityun.modules.group.UserEdit;
 import com.ityun.web.controller.BaseController;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -24,6 +27,8 @@ import java.util.UUID;
 @RequestMapping("/api/user")
 @Validated
 public class UserController extends BaseController {
+    @Autowired
+    private SiteConfig siteConfig;
 
     @GetMapping("/info")
     public Result info(@NotBlank(message = "token is must") String token) {
@@ -58,9 +63,10 @@ public class UserController extends BaseController {
         }
         String fileName = file.getOriginalFilename();
         String suffixName = fileName.substring(fileName.lastIndexOf("."));
-        String filePath = "D:\\temp-data\\avatar\\";
+        String rootPath = siteConfig.getLocation();
+        String filePath = Consts.avatarPath;
         fileName = UUID.randomUUID() + suffixName;
-        File dest = new File(filePath + fileName);
+        File dest = new File(rootPath+filePath + fileName);
         if (!dest.exists()) {
             dest.getParentFile().mkdirs();
         }
@@ -70,7 +76,7 @@ public class UserController extends BaseController {
             return Result.failure(e.getMessage());
         }
         Map<String, String> res = new HashMap<>();
-        res.put("filename", filePath+fileName);
+        res.put("filename", siteConfig.getUrl()+filePath+fileName);
         return Result.success("ok", res);
     }
 
