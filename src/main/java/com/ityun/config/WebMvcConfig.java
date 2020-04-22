@@ -14,5 +14,6 @@ public class WebMvcConfig implements WebMvcConfigurer {
         // 设置自定义的目录为资源存放目录
         String location = "file:///" + siteConfig.getLocation();
         registry.addResourceHandler("/storage/avatars/**").addResourceLocations(location + "/storage/avatars/");
+        registry.addResourceHandler("/storage/logs/**").addResourceLocations(location + "/storage/logs/");
     }
 }
