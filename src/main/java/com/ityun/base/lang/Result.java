@@ -6,9 +6,6 @@ import java.io.Serializable;
  * json响应格式
  */
 public class Result implements Serializable {
-    public static final int SUCCESS = 0;
-
-    public static final int ERROR = -1;
 
     private int code;
 
@@ -52,15 +49,15 @@ public class Result implements Serializable {
     }
 
     public static Result success(String message, Object data) {
-        return new Result(Result.SUCCESS, message, data);
+        return new Result(ResultConst.commonCode.COMMON_SUCCESS, message, data);
     }
 
     public static Result successMessage(String message) {
-        return new Result(Result.SUCCESS, message);
+        return new Result(ResultConst.commonCode.COMMON_SUCCESS, message);
     }
 
     public static Result failure(String message) {
-        return new Result(Result.ERROR, message);
+        return new Result(ResultConst.commonCode.COMMON_FAILURE, message);
     }
     public static Result failure(int code, String message) {
         return new Result(code, message);

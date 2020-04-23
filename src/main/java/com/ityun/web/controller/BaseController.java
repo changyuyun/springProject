@@ -3,6 +3,7 @@ package com.ityun.web.controller;
 import com.google.gson.Gson;
 import com.ityun.base.lang.Consts;
 import com.ityun.base.lang.Result;
+import com.ityun.base.lang.ResultConst;
 import com.ityun.base.utils.RedisUtils;
 import com.ityun.base.utils.TokenUtils;
 import com.ityun.config.SiteConfig;
@@ -36,7 +37,7 @@ public class BaseController {
         Map<String, String> result = new HashMap<>();
         User user = userService.login(username, md5(password));
         if (user == null) {
-            return Result.failure("username or password is error");
+            return Result.failure(ResultConst.userCode.LOGIN_FAILURE, ResultConst.userMESSAGE.LOGIN_FAILURE);
         }
         String token = TokenUtils.makeToken();
         result.put("id", String.valueOf(user.getId()));
@@ -50,7 +51,7 @@ public class BaseController {
         result.put("expiredTime", String.valueOf(expiredTime));
         tokenStore(token, result, expiredTime);
         userIdStore(String.valueOf(user.getId()), result);
-        return Result.success("ok", getTokenInfoMap(token));
+        return Result.success(ResultConst.commonMessage.COMMON_SUCCESS, getTokenInfoMap(token));
     }
 
     /**
@@ -61,14 +62,14 @@ public class BaseController {
     protected Result executeRegister(User user) {
         User checkRet = userService.checkUsername(user.getUsername());
         if (checkRet != null) {
-            return Result.failure("用户名已存在");
+            return Result.failure(ResultConst.userCode.USERNAME_EXIT, ResultConst.userMESSAGE.USERNAME_EXIT);
         }
         Date date = new Date();
         int ret = userService.register(user.getUsername(), user.getName(), user.getAvatar(), user.getEmail(), md5(user.getPassword()), user.getStatus(), date, user.getGender(), user.getComments(), user.getPost(), user.getSignature());
         if (ret <=0) {
-            return Result.failure("error");
+            return Result.failure(ResultConst.commonMessage.COMMON_FAILURE);
         }
-        return Result.successMessage("ok");
+        return Result.successMessage(ResultConst.commonMessage.COMMON_SUCCESS);
     }
 
     /**
@@ -79,35 +80,35 @@ public class BaseController {
     protected Result executeLogout(String token) {
         Boolean ret = removeToken(token);
         if (!ret) {
-            return Result.failure("error");
+            return Result.failure(ResultConst.commonMessage.COMMON_FAILURE);
         }
-        return Result.successMessage("ok");
+        return Result.successMessage(ResultConst.commonMessage.COMMON_FAILURE);
     }
 
     protected Result executeEdit(User user, String token) {
         int id = token2Id(token);
         if (id == 0) {
-            return Result.failure(-2, "not login status");
+            return Result.failure(ResultConst.commonCode.COMMON_AUTH_FAILURE, ResultConst.commonMessage.COMMON_AUTH_FAILURE);
         }
         int ret = userService.edit(id, user.getAvatar(), user.getSignature(), user.getName(), user.getEmail(), user.getGender());
         if (ret <=0) {
-            return Result.failure("error");
+            return Result.failure(ResultConst.commonMessage.COMMON_FAILURE);
         }
-        return Result.successMessage("ok");
+        return Result.successMessage(ResultConst.commonMessage.COMMON_FAILURE);
     }
 
     protected Result executePasswordReset(User user) {
         int id = token2Id(user.getToken());
         if (id == 0) {
-            return Result.failure(-2, "not login status");
+            return Result.failure(ResultConst.commonCode.COMMON_AUTH_FAILURE, ResultConst.commonMessage.COMMON_AUTH_FAILURE);
         }
         int ret = userService.passwordReset(id, md5(user.getPassword()), md5(user.getNewPassword()));
         if (ret < 0) {
-            return Result.failure("旧密码错误");
+            return Result.failure(ResultConst.userCode.OLD_PASSWORD_ERROR, ResultConst.userMESSAGE.OLD_PASSWORD_ERROR);
         } else if (ret == 0) {
-            return Result.failure("error");
+            return Result.failure(ResultConst.commonMessage.COMMON_FAILURE);
         } else {
-            return Result.successMessage("ok");
+            return Result.successMessage(ResultConst.commonMessage.COMMON_FAILURE);
         }
     }
 

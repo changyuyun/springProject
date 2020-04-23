@@ -2,6 +2,7 @@ package com.ityun.web.controller.site;
 
 import com.ityun.base.lang.Consts;
 import com.ityun.base.lang.Result;
+import com.ityun.base.lang.ResultConst;
 import com.ityun.config.SiteConfig;
 import com.ityun.modules.entity.User;
 import com.ityun.modules.group.UserEdit;
@@ -31,9 +32,9 @@ public class UserController extends BaseController {
     public Result info(@NotBlank(message = "token is must") String token) {
         Object tokenInfo = getTokenInfo(token);
         if (tokenInfo == null) {
-            return Result.failure(-2, "not login status");
+            return Result.failure(ResultConst.commonCode.COMMON_AUTH_FAILURE, ResultConst.commonMessage.COMMON_AUTH_FAILURE);
         }
-        return Result.success("ok", tokenInfo);
+        return Result.success(ResultConst.commonMessage.COMMON_SUCCESS, tokenInfo);
     }
 
     @PostMapping("edit")
@@ -48,15 +49,15 @@ public class UserController extends BaseController {
         type.add("image/gif");
         type.add("image/jpg");
         if( file.isEmpty() ){
-            return Result.failure("file can not been empty");
+            return Result.failure(ResultConst.fileCode.IMAGE_FILE_EMPTY_ERROR, ResultConst.fileMessage.IMAGE_FILE_EMPTY_ERROR);
         }
         String contentType = file.getContentType();
         long size = file.getSize();
         if(!type.contains(contentType)) {
-            return Result.failure("file type is error");
+            return Result.failure(ResultConst.fileCode.IMAGE_FILE_TYPE_ERROR, ResultConst.fileMessage.IMAGE_FILE_TYPE_ERROR);
         }
         if (size/(1024*1024) > 1) {
-            return Result.failure("file size is must low at 1M");
+            return Result.failure(ResultConst.fileCode.IMAGE_FILE_SIZE_ERROR, ResultConst.fileMessage.IMAGE_FILE_SIZE_ERROR);
         }
         String fileName = file.getOriginalFilename();
         String suffixName = fileName.substring(fileName.lastIndexOf("."));
@@ -74,7 +75,7 @@ public class UserController extends BaseController {
         }
         Map<String, String> res = new HashMap<>();
         res.put("filename", siteConfig.getUrl()+filePath+fileName);
-        return Result.success("ok", res);
+        return Result.success(ResultConst.commonMessage.COMMON_SUCCESS, res);
     }
 
     /**
