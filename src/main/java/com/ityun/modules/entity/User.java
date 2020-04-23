@@ -2,6 +2,7 @@ package com.ityun.modules.entity;
 
 import com.ityun.modules.group.UserEdit;
 import com.ityun.modules.group.UserLogin;
+import com.ityun.modules.group.UserPasswordReset;
 import com.ityun.modules.group.UserRegister;
 
 import javax.validation.constraints.*;
@@ -10,7 +11,7 @@ import java.util.Date;
 public class User {
     private Integer id;
 
-    @NotNull(message = "登陆名不能是空", groups = {UserLogin.class, UserRegister.class})
+    @NotNull(message = "登陆名不能是空", groups = {UserLogin.class, UserRegister.class, UserPasswordReset.class})
     @Size(min=3, max=10, message = "登陆名必须是3到10位", groups = {UserRegister.class})
     private String username;
 
@@ -25,9 +26,13 @@ public class User {
     @Pattern(regexp = "^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\\.[a-zA-Z0-9_-]+)+$",message = "邮箱格式错误", groups = {UserRegister.class, UserEdit.class})
     private String email;
 
-    @NotNull(message = "密码不能是空", groups = {UserLogin.class, UserRegister.class})
+    @NotNull(message = "密码不能是空", groups = {UserLogin.class, UserRegister.class, UserPasswordReset.class})
     @Pattern(regexp = "^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{8,16}$", message = "密码 由数字和字母组成，并且要同时含有数字和字母，且长度要在8-16位之间。", groups = {UserRegister.class})
     private String password;
+
+    @NotNull(message = "新密码不能是空", groups = {UserPasswordReset.class})
+    @Pattern(regexp = "^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{8,16}$", message = "新密码 由数字和字母组成，并且要同时含有数字和字母，且长度要在8-16位之间。", groups = {UserPasswordReset.class})
+    private String newPassword;
 
     private Integer status;
 
@@ -50,7 +55,7 @@ public class User {
     @Size(min = 5, max = 100, message = "个性签名最短5个字符，最大100个字符")
     private String signature;
 
-    @NotBlank(message = "token不能为空", groups = {UserEdit.class})
+    @NotBlank(message = "token不能为空", groups = {UserEdit.class, UserPasswordReset.class})
     private String token;
 
     public Integer getId() {
@@ -180,5 +185,13 @@ public class User {
 
     public void setToken(String token) {
         this.token = token;
+    }
+
+    public String getNewPassword() {
+        return newPassword;
+    }
+
+    public void setNewPassword(String newPassword) {
+        this.newPassword = newPassword;
     }
 }

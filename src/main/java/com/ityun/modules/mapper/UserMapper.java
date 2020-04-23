@@ -14,6 +14,12 @@ public interface UserMapper {
     @Select("select * from mto_user where username= #{username} and password= #{password}")
     User findByUsernameAndPassword(@Param("username") String username, @Param("password") String password);
 
+    @Select("select * from mto_user where username= #{username}")
+    User findByUsername(@Param("username") String username);
+
+    @Select("select * from mto_user where id= #{id} and password= #{password}")
+    User findByIdAndPassword(@Param("id") int id, @Param("password") String password);
+
     @Insert("insert into mto_user (username, name, avatar, email, password, status, created, gender, comments, posts, signature) values (#{username}, #{name}, #{avatar}, #{email}, #{password}, #{status}, #{created}, #{gender}, #{comments}, #{posts}, #{signature})")
     int addUser(@Param("username") String username,
                 @Param("name") String name,
@@ -34,4 +40,8 @@ public interface UserMapper {
                    @Param("name") String name,
                    @Param("email") String email,
                    @Param("gender") int gender);
+
+    @Update("update mto_user set password=#{password} where id=#{id}")
+    int updateUserPassword(@Param("id") int id, @Param("password") String password);
+
 }

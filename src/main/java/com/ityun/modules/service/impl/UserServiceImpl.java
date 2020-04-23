@@ -27,4 +27,18 @@ public class UserServiceImpl implements UserService {
     public int edit(int id, String avatar, String signature, String name, String email, int gender) {
         return userMapper.updateUser(id, avatar, signature, name, email, gender);
     }
+
+    @Override
+    public User checkUsername(String username) {
+        return userMapper.findByUsername(username);
+    }
+
+    @Override
+    public int passwordReset(int id, String password, String newPassword) {
+        User byIdAndPassword = userMapper.findByIdAndPassword(id, password);
+        if (byIdAndPassword == null) {
+            return -1;
+        }
+        return userMapper.updateUserPassword(id, newPassword);
+    }
 }

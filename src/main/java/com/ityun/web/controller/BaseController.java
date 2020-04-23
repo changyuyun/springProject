@@ -59,6 +59,10 @@ public class BaseController {
      * @return
      */
     protected Result executeRegister(User user) {
+        User checkRet = userService.checkUsername(user.getUsername());
+        if (checkRet != null) {
+            return Result.failure("用户名已存在");
+        }
         Date date = new Date();
         int ret = userService.register(user.getUsername(), user.getName(), user.getAvatar(), user.getEmail(), md5(user.getPassword()), user.getStatus(), date, user.getGender(), user.getComments(), user.getPost(), user.getSignature());
         if (ret <=0) {
@@ -81,23 +85,30 @@ public class BaseController {
     }
 
     protected Result executeEdit(User user, String token) {
-        Map<String, String> tokenInfoMap = getTokenInfoMap(token);
-        if (tokenInfoMap.isEmpty()) {
+        int id = token2Id(token);
+        if (id == 0) {
             return Result.failure(-2, "not login status");
-        }
-        //由token取出用户id
-        int id = 0;
-        for (Map.Entry<String, String> stringStringEntry : tokenInfoMap.entrySet()) {
-            if ("id".equals(stringStringEntry.getKey())) {
-                id = Integer.parseInt(stringStringEntry.getValue());
-                break;
-            }
         }
         int ret = userService.edit(id, user.getAvatar(), user.getSignature(), user.getName(), user.getEmail(), user.getGender());
         if (ret <=0) {
             return Result.failure("error");
         }
         return Result.successMessage("ok");
+    }
+
+    protected Result executePasswordReset(User user) {
+        int id = token2Id(user.getToken());
+        if (id == 0) {
+            return Result.failure(-2, "not login status");
+        }
+        int ret = userService.passwordReset(id, md5(user.getPassword()), md5(user.getNewPassword()));
+        if (ret < 0) {
+            return Result.failure("旧密码错误");
+        } else if (ret == 0) {
+            return Result.failure("error");
+        } else {
+            return Result.successMessage("ok");
+        }
     }
 
     protected String md5(String needle) {
@@ -126,6 +137,21 @@ public class BaseController {
 
     protected Object getTokenInfo(String token) {
         return getTokenInfoMap(token);
+    }
+
+    protected int token2Id(String token) {
+        int id = 0;
+        Map<String, String> tokenInfoMap = getTokenInfoMap(token);
+        if (!tokenInfoMap.isEmpty()) {
+            //由token取出用户id
+            for (Map.Entry<String, String> stringStringEntry : tokenInfoMap.entrySet()) {
+                if ("id".equals(stringStringEntry.getKey())) {
+                    id = Integer.parseInt(stringStringEntry.getValue());
+                    break;
+                }
+            }
+        }
+        return id;
     }
 
     protected Map<String, String> getTokenInfoMap(String token) {

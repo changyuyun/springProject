@@ -5,6 +5,7 @@ import com.ityun.base.lang.Result;
 import com.ityun.config.SiteConfig;
 import com.ityun.modules.entity.User;
 import com.ityun.modules.group.UserEdit;
+import com.ityun.modules.group.UserPasswordReset;
 import com.ityun.web.controller.BaseController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -76,9 +77,14 @@ public class UserController extends BaseController {
         return Result.success("ok", res);
     }
 
-    @RequestMapping("reset/password")
-    public Result resetPassword() {
-        //todo:重置密码逻辑 旧密码  新密码 用户名
-        return Result.successMessage("ok");
+    /**
+     * 重置密码
+     * @param user
+     * @return
+     */
+    @PostMapping("reset/password")
+    public Result resetPassword(@Validated({UserPasswordReset.class}) @RequestBody(required = true) User user) {
+        //用户名 旧密码 新密码
+        return executePasswordReset(user);
     }
 }
