@@ -11,11 +11,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.annotation.Resource;
-import javax.servlet.Servlet;
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -30,8 +26,6 @@ import java.util.UUID;
 @RequestMapping("/api/user")
 @Validated
 public class UserController extends BaseController {
-    @Autowired
-    private SiteConfig siteConfig;
     @GetMapping("/info")
     public Result info(@NotBlank(message = "token is must") String token) {
         Object tokenInfo = getTokenInfo(token);

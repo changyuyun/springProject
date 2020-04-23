@@ -1,6 +1,7 @@
 package com.ityun.web.controller;
 
 import com.google.gson.Gson;
+import com.ityun.base.lang.Consts;
 import com.ityun.base.lang.Result;
 import com.ityun.base.utils.RedisUtils;
 import com.ityun.base.utils.TokenUtils;
@@ -19,6 +20,9 @@ public class BaseController {
     private String redisIdUserKey = "User:id:%s";
     @Autowired
     private UserService userService;
+
+    @Autowired
+    protected SiteConfig siteConfig;//网站配置
 
     private Long expiredTime = 3600L;
 
@@ -46,7 +50,7 @@ public class BaseController {
         result.put("expiredTime", String.valueOf(expiredTime));
         tokenStore(token, result, expiredTime);
         userIdStore(String.valueOf(user.getId()), result);
-        return Result.success("ok", result);
+        return Result.success("ok", getTokenInfoMap(token));
     }
 
     /**
@@ -121,7 +125,7 @@ public class BaseController {
     }
 
     protected Object getTokenInfo(String token) {
-        return RedisUtils.get(createRedisUserTokenKey(token));
+        return getTokenInfoMap(token);
     }
 
     protected Map<String, String> getTokenInfoMap(String token) {
@@ -133,6 +137,15 @@ public class BaseController {
         Gson gson = new Gson();
         String json = gson.toJson(info);
         result = gson.fromJson(json, Map.class);
+        for (Map.Entry<String, String> resultEntry : result.entrySet()) {
+            if ("avatar".equals(resultEntry.getKey())) {
+                if (resultEntry.getValue().length() == 0) {
+                    result.replace("avatar", Consts.AVATAR);
+                } else {
+                    result.replace("avatar", siteConfig.getUrl() + resultEntry.getValue());
+                }
+            }
+        }
         return result;
     }
 
