@@ -8,7 +8,6 @@ import javax.validation.constraints.*;
 import java.util.Date;
 
 public class User {
-    @NotNull(message = "id不能是空", groups = {UserEdit.class})
     private Integer id;
 
     @NotNull(message = "登陆名不能是空", groups = {UserLogin.class, UserRegister.class})
@@ -50,6 +49,9 @@ public class User {
     @NotNull(message = "个性签名不能为空", groups = {UserEdit.class})
     @Size(min = 5, max = 100, message = "个性签名最短5个字符，最大100个字符")
     private String signature;
+
+    @NotBlank(message = "token不能为空", groups = {UserEdit.class})
+    private String token;
 
     public Integer getId() {
         return id;
@@ -169,5 +171,14 @@ public class User {
 
     public void setSignature(String signature) {
         this.signature = signature;
+    }
+
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 }

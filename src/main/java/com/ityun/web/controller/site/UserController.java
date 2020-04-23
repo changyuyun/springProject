@@ -12,7 +12,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import javax.servlet.Servlet;
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -29,19 +32,18 @@ import java.util.UUID;
 public class UserController extends BaseController {
     @Autowired
     private SiteConfig siteConfig;
-
     @GetMapping("/info")
     public Result info(@NotBlank(message = "token is must") String token) {
         Object tokenInfo = getTokenInfo(token);
         if (tokenInfo == null) {
-            return Result.failure("not login status");
+            return Result.failure(-2, "not login status");
         }
         return Result.success("ok", tokenInfo);
     }
 
     @PostMapping("edit")
     public Result edit(@Validated({UserEdit.class}) @RequestBody(required = true) User user) {
-        return executeEdit(user);
+        return executeEdit(user, user.getToken());
     }
 
     @PostMapping("avatar")
@@ -82,7 +84,7 @@ public class UserController extends BaseController {
 
     @RequestMapping("reset/password")
     public Result resetPassword() {
-        //todo:重置密码逻辑
+        //todo:重置密码逻辑 旧密码  新密码 用户名
         return Result.successMessage("ok");
     }
 }

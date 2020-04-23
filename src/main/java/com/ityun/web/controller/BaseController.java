@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.ityun.base.lang.Result;
 import com.ityun.base.utils.RedisUtils;
 import com.ityun.base.utils.TokenUtils;
+import com.ityun.config.SiteConfig;
 import com.ityun.modules.entity.User;
 import com.ityun.modules.service.UserService;
 import org.apache.commons.codec.digest.DigestUtils;
@@ -75,8 +76,20 @@ public class BaseController {
         return Result.successMessage("ok");
     }
 
-    protected Result executeEdit(User user) {
-        int ret = userService.edit(user.getId(), user.getAvatar(), user.getSignature(), user.getName(), user.getEmail(), user.getGender());
+    protected Result executeEdit(User user, String token) {
+        Map<String, String> tokenInfoMap = getTokenInfoMap(token);
+        if (tokenInfoMap.isEmpty()) {
+            return Result.failure(-2, "not login status");
+        }
+        //由token取出用户id
+        int id = 0;
+        for (Map.Entry<String, String> stringStringEntry : tokenInfoMap.entrySet()) {
+            if ("id".equals(stringStringEntry.getKey())) {
+                id = Integer.parseInt(stringStringEntry.getValue());
+                break;
+            }
+        }
+        int ret = userService.edit(id, user.getAvatar(), user.getSignature(), user.getName(), user.getEmail(), user.getGender());
         if (ret <=0) {
             return Result.failure("error");
         }
@@ -109,6 +122,18 @@ public class BaseController {
 
     protected Object getTokenInfo(String token) {
         return RedisUtils.get(createRedisUserTokenKey(token));
+    }
+
+    protected Map<String, String> getTokenInfoMap(String token) {
+        Map<String, String> result = new HashMap<>();
+        Object info = RedisUtils.get(createRedisUserTokenKey(token));
+        if (info == null) {
+            return result;
+        }
+        Gson gson = new Gson();
+        String json = gson.toJson(info);
+        result = gson.fromJson(json, Map.class);
+        return result;
     }
 
 }
