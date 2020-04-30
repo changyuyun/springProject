@@ -7,6 +7,7 @@ import com.ityun.base.lang.ResultConst;
 import com.ityun.base.utils.RedisUtils;
 import com.ityun.base.utils.TokenUtils;
 import com.ityun.config.SiteConfig;
+import com.ityun.modules.entity.Pager;
 import com.ityun.modules.entity.User;
 import com.ityun.modules.service.UserService;
 import org.apache.commons.codec.digest.DigestUtils;
@@ -174,6 +175,15 @@ public class BaseController {
             }
         }
         return result;
+    }
+
+    protected Pager getPager(int currentPage, int totalRecord, int totalPage, Object data) {
+        Pager pager = new Pager();
+        pager.setCurrentPage(currentPage);
+        pager.setTotalRecord(totalRecord);
+        pager.setTotalPage(totalPage);
+        pager.setData(data);
+        return pager;
     }
 
 }

@@ -10,7 +10,7 @@ public class Pager {
     //总页数
     private Integer totalPage;
     //数据列表
-    private List data;
+    private Object data;
 
     public Integer getCurrentPage() {
         return currentPage;
@@ -36,11 +36,11 @@ public class Pager {
         this.totalPage = totalPage;
     }
 
-    public List getData() {
+    public Object getData() {
         return data;
     }
 
-    public void setData(List data) {
+    public void setData(Object data) {
         this.data = data;
     }
 }
