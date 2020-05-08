@@ -14,6 +14,8 @@ public class Post {
 
     private Date created;
 
+    private String created_at;
+
     private Integer favors;
 
     private Integer featured;
@@ -142,5 +144,13 @@ public class Post {
 
     public void setWeight(Integer weight) {
         this.weight = weight;
+    }
+
+    public String getCreated_at() {
+        return created_at;
+    }
+
+    public void setCreated_at(String created_at) {
+        this.created_at = created_at;
     }
 }

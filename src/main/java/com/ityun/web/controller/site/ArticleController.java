@@ -2,8 +2,8 @@ package com.ityun.web.controller.site;
 
 import com.ityun.base.lang.Result;
 import com.ityun.base.lang.ResultConst;
+import com.ityun.modules.entity.ArticlePost;
 import com.ityun.modules.entity.Pager;
-import com.ityun.modules.entity.Post;
 import com.ityun.modules.service.PostService;
 import com.ityun.web.controller.BaseController;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,7 +43,7 @@ public class ArticleController extends BaseController {
         long totalRecord = postService.listCount(channel);
         int total = (int)totalRecord;
         int totalPage = (total + limit-1)/limit;
-        List<Post> list = postService.list(start, limit, channel);
+        List<ArticlePost> list = postService.list(start, limit, channel);
         Pager pager = getPager(page, total, totalPage, list);
         return Result.success(ResultConst.commonMessage.COMMON_SUCCESS, pager);
     }
