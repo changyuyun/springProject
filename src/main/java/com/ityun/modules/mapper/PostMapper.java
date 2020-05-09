@@ -11,7 +11,7 @@ import java.util.List;
 public interface PostMapper {
 
     @Select("<script>"
-            +"select p.*, u.name as author, u.avatar from mto_post as p left join mto_user as u on p.author_id=u.id  where 1=1"
+            +"select p.*, u.name as author, u.avatar, c.name as channel_name from mto_post as p left join mto_user as u on p.author_id=u.id left join mto_channel as c on p.channel_id=c.id  where 1=1"
             +"<if test='channel != 0'>"
             +"and channel_id=#{channel}"
             +"</if>"

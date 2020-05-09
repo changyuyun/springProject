@@ -40,6 +40,7 @@ public class BaseController {
         if (user == null) {
             return Result.failure(ResultConst.userCode.LOGIN_FAILURE, ResultConst.userMESSAGE.LOGIN_FAILURE);
         }
+
         String token = TokenUtils.makeToken();
         result.put("id", String.valueOf(user.getId()));
         result.put("username", user.getUsername());
@@ -47,9 +48,12 @@ public class BaseController {
         result.put("email", user.getEmail());
         result.put("avatar", user.getAvatar());
         result.put("gender", String.valueOf(user.getGender()));
+        result.put("comments", String.valueOf(user.getComments()));
+        result.put("posts", String.valueOf(user.getPosts()));
+        result.put("signature", user.getSignature());
         result.put("last_login", String.valueOf(user.getLast_login()));
         result.put("token", token);
-        result.put("expiredTime", String.valueOf(expiredTime));
+        result.put("expiredTime", getExpiredTime());
         tokenStore(token, result, expiredTime);
         userIdStore(String.valueOf(user.getId()), result);
         return Result.success(ResultConst.commonMessage.COMMON_SUCCESS, getTokenInfoMap(token));
@@ -66,7 +70,7 @@ public class BaseController {
             return Result.failure(ResultConst.userCode.USERNAME_EXIT, ResultConst.userMESSAGE.USERNAME_EXIT);
         }
         Date date = new Date();
-        int ret = userService.register(user.getUsername(), user.getName(), user.getAvatar(), user.getEmail(), md5(user.getPassword()), user.getStatus(), date, user.getGender(), user.getComments(), user.getPost(), user.getSignature());
+        int ret = userService.register(user.getUsername(), user.getName(), user.getAvatar(), user.getEmail(), md5(user.getPassword()), user.getStatus(), date, user.getGender(), user.getComments(), user.getPosts(), user.getSignature());
         if (ret <=0) {
             return Result.failure(ResultConst.commonMessage.COMMON_FAILURE);
         }
@@ -115,6 +119,29 @@ public class BaseController {
 
     protected String md5(String needle) {
         return DigestUtils.md5Hex(needle).toUpperCase();
+    }
+
+    /**
+     * 构造过期时间
+     * @return
+     */
+    protected String getExpiredTime() {
+        long nowTime = System.currentTimeMillis();
+        return String.valueOf(nowTime + expiredTime*1000);
+    }
+
+    /**
+     * 刷新token过期时间
+     * @param token
+     * @return
+     */
+    protected boolean refreshToken(String token) {
+        Map<String, String> userInfo = getTokenInfoMap(token);
+        if (userInfo == null) {
+            return false;
+        }
+        userInfo.replace("expiredTime", getExpiredTime());
+        return tokenStore(token, userInfo, expiredTime);
     }
 
     protected boolean tokenStore(String token, Object data, Long expiredTime) {

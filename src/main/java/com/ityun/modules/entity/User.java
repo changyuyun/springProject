@@ -49,7 +49,7 @@ public class User {
 
     private Integer comments;
 
-    private Integer post;
+    private Integer posts;
 
     @NotNull(message = "个性签名不能为空", groups = {UserEdit.class})
     @Size(min = 5, max = 100, message = "个性签名最短5个字符，最大100个字符")
@@ -162,12 +162,12 @@ public class User {
         this.comments = comments;
     }
 
-    public Integer getPost() {
-        return post;
+    public Integer getPosts() {
+        return posts;
     }
 
-    public void setPost(int post) {
-        this.post = post;
+    public void setPosts(Integer posts) {
+        this.posts = posts;
     }
 
     public String getSignature() {
