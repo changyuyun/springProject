@@ -26,15 +26,7 @@ public class PostServiceImpl implements PostService {
     @Override
     public List<ArticlePost> list(int start, int limit, int channel) {
         List<ArticlePost> listByPager = postMapper.getListByPager(start, limit, channel);
-        //处理头像 添加网站域名
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        for (ArticlePost articlePost : listByPager) {
-            String avatar = siteConfig.getUrl() + articlePost.getAvatar();
-            articlePost.setAvatar(avatar);
-            String format = sdf.format(articlePost.getCreated());
-            articlePost.setCreated_at(format);
-        }
-        return listByPager;
+        return formatList(listByPager);
     }
 
     @Override
