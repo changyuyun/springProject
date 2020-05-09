@@ -49,6 +49,13 @@ public class ArticleController extends BaseController {
         return Result.success(ResultConst.commonMessage.COMMON_SUCCESS, pager);
     }
 
+    /**
+     * 作者文章列表
+     * @param authorId
+     * @param currentPage
+     * @param pageSize
+     * @return
+     */
     @GetMapping("/user/list")
     public Result userList(@NotBlank(message = "authorId is must") String authorId, String currentPage, String pageSize) {
         if (authorId == null) {
@@ -72,5 +79,27 @@ public class ArticleController extends BaseController {
         List<ArticlePost> articlePosts = postService.listByUser(start, limit, id);
         Pager pager = getPager(page, total, totalPage, articlePosts);
         return Result.success(ResultConst.commonMessage.COMMON_SUCCESS, pager);
+    }
+
+    /**
+     * 最新文章
+     * @return
+     */
+    @GetMapping("/latest")
+    public Result latest() {
+        int limit = 3;
+        List<ArticlePost> articlePosts = postService.lastedList(limit);
+        return Result.success(ResultConst.commonMessage.COMMON_SUCCESS, articlePosts);
+    }
+
+    /**
+     * 热门文章
+     * @return
+     */
+    @GetMapping("/hottest")
+    public Result hottest() {
+        int limit = 3;
+        List<ArticlePost> articlePosts = postService.hottestList(limit);
+        return Result.success(ResultConst.commonMessage.COMMON_SUCCESS, articlePosts);
     }
 }

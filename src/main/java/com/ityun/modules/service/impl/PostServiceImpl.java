@@ -40,6 +40,16 @@ public class PostServiceImpl implements PostService {
         return postMapper.countListByUser(authorId);
     }
 
+    @Override
+    public List<ArticlePost> lastedList(int limit) {
+        return postMapper.getListByTime(limit);
+    }
+
+    @Override
+    public List<ArticlePost> hottestList(int limit) {
+        return postMapper.getListByViews(limit);
+    }
+
     /**
      * 处理列表数据
      * @param list

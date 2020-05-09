@@ -38,4 +38,9 @@ public interface PostMapper {
             +"</script>")
     Long countListByUser(@Param("authorId") int authorId);
 
+    @Select("select id, title, summary, author_id, channel_id, created, views from mto_post order by created desc limit #{limit}")
+    List<ArticlePost> getListByTime(@Param("limit") int limit);
+
+    @Select("select id, title, summary, author_id, channel_id, created, views from mto_post order by views desc limit #{limit}")
+    List<ArticlePost> getListByViews(@Param("limit") int limit);
 }

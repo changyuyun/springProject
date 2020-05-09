@@ -13,4 +13,8 @@ public interface PostService {
     long listCountByUser(int authorId);
 
     List<ArticlePost> listByUser(int start, int limit, int authorId);
+
+    List<ArticlePost> lastedList(int limit);
+
+    List<ArticlePost> hottestList(int limit);
 }
