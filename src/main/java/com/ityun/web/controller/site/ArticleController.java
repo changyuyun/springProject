@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.constraints.NotBlank;
 import java.util.List;
 
 @RestController
@@ -45,6 +46,31 @@ public class ArticleController extends BaseController {
         int totalPage = (total + limit-1)/limit;
         List<ArticlePost> list = postService.list(start, limit, channel);
         Pager pager = getPager(page, total, totalPage, list);
+        return Result.success(ResultConst.commonMessage.COMMON_SUCCESS, pager);
+    }
+
+    @GetMapping("/user/list")
+    public Result userList(@NotBlank(message = "authorId is must") String authorId, String currentPage, String pageSize) {
+        if (authorId == null) {
+            authorId = "0";
+        }
+        if (currentPage == null) {
+            currentPage = "1";
+        }
+        if (pageSize == null) {
+            pageSize = "10";
+        }
+        int id = Integer.parseInt(authorId);
+        int page = Integer.parseInt(currentPage);
+        int limit = Integer.parseInt(pageSize);
+        int start = (page - 1) * limit;
+
+        long totalRecord = postService.listCountByUser(id);
+        int total = (int)totalRecord;
+        int totalPage = (total + limit-1)/limit;
+
+        List<ArticlePost> articlePosts = postService.listByUser(start, limit, id);
+        Pager pager = getPager(page, total, totalPage, articlePosts);
         return Result.success(ResultConst.commonMessage.COMMON_SUCCESS, pager);
     }
 }

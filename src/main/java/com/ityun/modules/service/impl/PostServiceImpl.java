@@ -36,4 +36,35 @@ public class PostServiceImpl implements PostService {
         }
         return listByPager;
     }
+
+    @Override
+    public List<ArticlePost> listByUser(int start, int limit, int authorId) {
+        List<ArticlePost> listByUser = postMapper.getListByUser(start, limit, authorId);
+        return formatList(listByUser);
+    }
+
+    @Override
+    public long listCountByUser(int authorId) {
+        return postMapper.countListByUser(authorId);
+    }
+
+    /**
+     * 处理列表数据
+     * @param list
+     * @return
+     */
+    private List<ArticlePost> formatList(List<ArticlePost> list) {
+        if (list == null) {
+            return null;
+        }
+        //处理头像 添加网站域名
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        for (ArticlePost articlePost : list) {
+            String avatar = siteConfig.getUrl() + articlePost.getAvatar();
+            articlePost.setAvatar(avatar);
+            String format = sdf.format(articlePost.getCreated());
+            articlePost.setCreated_at(format);
+        }
+        return list;
+    }
 }

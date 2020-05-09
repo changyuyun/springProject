@@ -9,4 +9,8 @@ public interface PostService {
     long listCount(int channel);
 
     List<ArticlePost> list(int start, int limit, int channel);
+
+    long listCountByUser(int authorId);
+
+    List<ArticlePost> listByUser(int start, int limit, int authorId);
 }
