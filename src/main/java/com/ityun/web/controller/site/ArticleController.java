@@ -82,6 +82,18 @@ public class ArticleController extends BaseController {
     }
 
     /**
+     * 文章详情
+     * @param id
+     * @return
+     */
+    @GetMapping("/detail")
+    public Result detail(@NotBlank(message = "id is must") String id) {//TODO:
+        Integer articleId = Integer.parseInt(id);
+        System.out.println(articleId);
+        return Result.success(ResultConst.commonMessage.COMMON_SUCCESS, null);
+    }
+
+    /**
      * 最新文章
      * @return
      */
