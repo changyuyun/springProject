@@ -43,4 +43,7 @@ public interface PostMapper {
 
     @Select("select id, title, summary, author_id, channel_id, created, views from mto_post order by views desc limit #{limit}")
     List<ArticlePost> getListByViews(@Param("limit") int limit);
+
+    @Select("select p.*, u.name as author, u.avatar, c.name as channel_name from mto_post as p left join mto_user as u on p.author_id=u.id left join mto_channel as c on p.channel_id=c.id  where p.title like concat('%', #{keyword}, '%') order by p.created desc")
+    List<ArticlePost> getListByKeyword(@Param("keyword") String keyword);
 }

@@ -17,4 +17,6 @@ public interface PostService {
     List<ArticlePost> lastedList(int limit);
 
     List<ArticlePost> hottestList(int limit);
+
+    List<ArticlePost> search(String keyword);
 }

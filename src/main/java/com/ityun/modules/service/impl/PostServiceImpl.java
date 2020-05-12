@@ -69,4 +69,10 @@ public class PostServiceImpl implements PostService {
         }
         return list;
     }
+
+    @Override
+    public List<ArticlePost> search(String keyword) {
+        List<ArticlePost> listByKeyword = postMapper.getListByKeyword(keyword);
+        return formatList(listByKeyword);
+    }
 }

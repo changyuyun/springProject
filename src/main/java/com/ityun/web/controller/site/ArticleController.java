@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.constraints.NotBlank;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -113,5 +114,19 @@ public class ArticleController extends BaseController {
         int limit = 3;
         List<ArticlePost> articlePosts = postService.hottestList(limit);
         return Result.success(ResultConst.commonMessage.COMMON_SUCCESS, articlePosts);
+    }
+
+    /**
+     * 搜索文章
+     * @return
+     */
+    @GetMapping("/search")
+    public Result search(String keyword) {
+        List<ArticlePost> result = new ArrayList();
+        if (keyword == null || "".equals(keyword)) {
+            return Result.success(ResultConst.commonMessage.COMMON_SUCCESS, result);
+        }
+        result = postService.search(keyword);
+        return Result.success(ResultConst.commonMessage.COMMON_SUCCESS, result);
     }
 }
