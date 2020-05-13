@@ -5,6 +5,7 @@ import com.ityun.base.lang.ResultConst;
 import com.ityun.modules.entity.ArticlePost;
 import com.ityun.modules.entity.Pager;
 import com.ityun.modules.service.PostService;
+import com.ityun.web.annotation.DisableAuth;
 import com.ityun.web.controller.BaseController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -27,6 +28,7 @@ public class ArticleController extends BaseController {
      * @return
      */
     @GetMapping("/list")
+    @DisableAuth
     public Result list(String channelId, String currentPage, String pageSize) {
         if (channelId == null) {
             channelId = "0";
@@ -58,6 +60,7 @@ public class ArticleController extends BaseController {
      * @return
      */
     @GetMapping("/user/list")
+    @DisableAuth
     public Result userList(@NotBlank(message = "authorId is must") String authorId, String currentPage, String pageSize) {
         if (authorId == null) {
             authorId = "0";
@@ -88,6 +91,7 @@ public class ArticleController extends BaseController {
      * @return
      */
     @GetMapping("/detail")
+    @DisableAuth
     public Result detail(@NotBlank(message = "id is must") String id) {//TODO:
         Integer articleId = Integer.parseInt(id);
         System.out.println(articleId);
@@ -99,6 +103,7 @@ public class ArticleController extends BaseController {
      * @return
      */
     @GetMapping("/latest")
+    @DisableAuth
     public Result latest() {
         int limit = 3;
         List<ArticlePost> articlePosts = postService.lastedList(limit);
@@ -110,6 +115,7 @@ public class ArticleController extends BaseController {
      * @return
      */
     @GetMapping("/hottest")
+    @DisableAuth
     public Result hottest() {
         int limit = 3;
         List<ArticlePost> articlePosts = postService.hottestList(limit);
@@ -121,6 +127,7 @@ public class ArticleController extends BaseController {
      * @return
      */
     @GetMapping("/search")
+    @DisableAuth
     public Result search(String keyword) {
         List<ArticlePost> result = new ArrayList();
         if (keyword == null || "".equals(keyword)) {

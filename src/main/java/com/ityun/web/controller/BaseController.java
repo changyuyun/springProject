@@ -168,7 +168,7 @@ public class BaseController {
         return getTokenInfoMap(token);
     }
 
-    protected int token2Id(String token) {
+    public int token2Id(String token) {
         int id = 0;
         Map<String, String> tokenInfoMap = getTokenInfoMap(token);
         if (!tokenInfoMap.isEmpty()) {

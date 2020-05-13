@@ -4,6 +4,7 @@ import com.ityun.base.lang.Result;
 import com.ityun.modules.entity.User;
 import com.ityun.modules.group.UserLogin;
 import com.ityun.modules.group.UserRegister;
+import com.ityun.web.annotation.DisableAuth;
 import com.ityun.web.controller.BaseController;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +23,7 @@ import java.util.Map;
 public class AuthController extends BaseController {
 
     @PostMapping(value = "/login")
+    @DisableAuth
     public Result login(@Validated({UserLogin.class}) @RequestBody(required = true) User user) {
         String username = user.getUsername();
         String password = user.getPassword();
@@ -29,6 +31,7 @@ public class AuthController extends BaseController {
     }
 
     @PostMapping(value = "/register")
+    @DisableAuth
     public Result register(@Validated({UserRegister.class}) @RequestBody(required = true) User user) {
         return executeRegister(user);
     }

@@ -1,11 +1,15 @@
 package com.ityun.base.lang;
 
+import org.springframework.util.StringUtils;
+
 public interface ResultConst {
     interface commonCode {
         int COMMON_FAILURE = -1;
         int COMMON_SUCCESS = 0;
         int COMMON_AUTH_FAILURE = -2;
         int COMMON_SIGN_ERROR = -3;
+        int COMMON_TOKEN_NEEDLE = -4;
+        int COMMON_TOKEN_ERROR = -5;
     }
 
     interface commonMessage {
@@ -13,6 +17,8 @@ public interface ResultConst {
         String COMMON_SUCCESS = "成功";
         String COMMON_AUTH_FAILURE = "未登录";
         String COMMON_SIGN_ERROR = "验签失败";
+        String COMMON_TOKEN_NEEDLE = "token必须";
+        String COMMON_TOKEN_ERROR = "token错误";
     }
 
     interface userCode {
