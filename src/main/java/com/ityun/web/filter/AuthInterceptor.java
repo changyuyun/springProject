@@ -35,14 +35,14 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
             return false;
         }
         //token是否正确
-        BaseController baseController = new BaseController();
+        /*BaseController baseController = new BaseController();
         int ret = baseController.token2Id(authToken);
         if (ret == 0) {
             setResponse(request, response, ResultConst.commonCode.COMMON_TOKEN_ERROR, ResultConst.commonMessage.COMMON_TOKEN_ERROR);
             return false;
-        }
+        }*/
         request.setAttribute("token", authToken);
-        request.setAttribute("uid", ret);
+        //request.setAttribute("uid", ret);
         //return true;
         return super.preHandle(request, response, handler);
     }

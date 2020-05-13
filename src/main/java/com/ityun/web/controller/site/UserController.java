@@ -6,11 +6,14 @@ import com.ityun.base.lang.ResultConst;
 import com.ityun.modules.entity.User;
 import com.ityun.modules.group.UserEdit;
 import com.ityun.modules.group.UserPasswordReset;
+import com.ityun.web.annotation.DisableAuth;
 import com.ityun.web.controller.BaseController;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -25,24 +28,26 @@ import java.util.UUID;
 @RequestMapping("/api/user")
 @Validated
 public class UserController extends BaseController {
+    @Autowired
+    HttpServletRequest request;
     @GetMapping("/info")
     public Result info() {
-        System.out.println(1);
-
-        /*Object tokenInfo = getTokenInfo(token);
+        String token = String.valueOf(request.getAttribute("token"));
+        Object tokenInfo = getTokenInfo(token);
         if (tokenInfo == null) {
             return Result.failure(ResultConst.commonCode.COMMON_AUTH_FAILURE, ResultConst.commonMessage.COMMON_AUTH_FAILURE);
         }
-        return Result.success(ResultConst.commonMessage.COMMON_SUCCESS, tokenInfo);*/
-        return null;
+        return Result.success(ResultConst.commonMessage.COMMON_SUCCESS, tokenInfo);
     }
 
     @PostMapping("edit")
     public Result edit(@Validated({UserEdit.class}) @RequestBody(required = true) User user) {
-        return executeEdit(user, user.getToken());
+        String token = String.valueOf(request.getAttribute("token"));
+        return executeEdit(user, token);
     }
 
     @PostMapping("avatar")
+    @DisableAuth
     public Result avatar(@RequestParam(value = "file") MultipartFile file) {
         ArrayList<String> type = new ArrayList<>();
         type.add("image/png");
