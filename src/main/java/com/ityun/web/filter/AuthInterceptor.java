@@ -3,6 +3,7 @@ package com.ityun.web.filter;
 import com.google.gson.Gson;
 import com.ityun.base.lang.Result;
 import com.ityun.base.lang.ResultConst;
+import com.ityun.base.utils.RedisUtils;
 import com.ityun.web.annotation.DisableAuth;
 import com.ityun.web.controller.BaseController;
 
@@ -13,11 +14,16 @@ import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * token拦截器
  */
 public class AuthInterceptor extends HandlerInterceptorAdapter {
+
+    private String redisTokenUserKey = "User:token:%s";
+
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         if (!(handler instanceof HandlerMethod)) {
@@ -34,16 +40,16 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
             setResponse(request, response, ResultConst.commonCode.COMMON_TOKEN_NEEDLE, ResultConst.commonMessage.COMMON_TOKEN_NEEDLE);
             return false;
         }
+
         //token是否正确
-        /*BaseController baseController = new BaseController();
-        int ret = baseController.token2Id(authToken);
+        Integer ret = verifyAuthToken(authToken);
         if (ret == 0) {
             setResponse(request, response, ResultConst.commonCode.COMMON_TOKEN_ERROR, ResultConst.commonMessage.COMMON_TOKEN_ERROR);
             return false;
-        }*/
+        }
+        //校验通过：放行
         request.setAttribute("token", authToken);
-        //request.setAttribute("uid", ret);
-        //return true;
+        request.setAttribute("uid", ret);
         return super.preHandle(request, response, handler);
     }
 
@@ -58,6 +64,29 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
      */
     private String getAuthToken(HttpServletRequest request) {
         return request.getHeader("token");
+    }
+
+    /**
+     * 校验token是否正确
+     * @param authToken
+     * @return
+     */
+    private int verifyAuthToken(String authToken) {
+        Integer ret = 0;
+        Map<String, String> result = new HashMap<>();
+        String key = String.format(redisTokenUserKey, authToken);
+        Object info = RedisUtils.get(key);
+        if (info != null) {
+            Gson gson = new Gson();
+            String json = gson.toJson(info);
+            result = gson.fromJson(json, Map.class);
+            for (Map.Entry<String, String> stringStringEntry : result.entrySet()) {
+                if ("id".equals(stringStringEntry.getKey())) {
+                    ret = Integer.parseInt(stringStringEntry.getValue());
+                }
+            }
+        }
+        return ret;
     }
 
     /**
