@@ -5,7 +5,6 @@ import com.ityun.base.lang.Result;
 import com.ityun.base.lang.ResultConst;
 import com.ityun.base.utils.RedisUtils;
 import com.ityun.web.annotation.DisableAuth;
-import com.ityun.web.controller.BaseController;
 
 import org.springframework.util.StringUtils;
 import org.springframework.web.method.HandlerMethod;
@@ -49,7 +48,7 @@ public class AuthInterceptor extends HandlerInterceptorAdapter {
         }
         //校验通过：放行
         request.setAttribute("token", authToken);
-        request.setAttribute("uid", ret);
+        request.setAttribute("user_id", ret);
         return super.preHandle(request, response, handler);
     }
 
